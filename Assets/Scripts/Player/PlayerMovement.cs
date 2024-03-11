@@ -20,9 +20,6 @@ public class PlayerMovement : CharacterMovement {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 
-        Debug.Log(moveX);
-        Debug.Log(moveY);
-        Debug.Log($"Direction {direction}");
         if ((moveX!= 0 || moveY != 0) && getDirection(moveX, moveY) != direction) {
             HandlePlayerAnimation(moveX, moveY);    
             direction = getDirection(moveX, moveY);
