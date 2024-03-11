@@ -12,7 +12,7 @@ public class GameLogic : MonoBehaviour
 
 
     private Vector2[] harvestingZones;
-    private int howManyTrees;
+    public int howManyTrees;
     private int populatedWith;
     public GameObject aliveTree;
 
@@ -21,8 +21,8 @@ public class GameLogic : MonoBehaviour
 
     private int[] aliveTrees;
     private int gameState = 2;
-    private int points = 0;
-    private int liveTrees = 0;
+    public int points = 0;
+    public int liveTrees = 0;
 
     private void Awake() {
 
