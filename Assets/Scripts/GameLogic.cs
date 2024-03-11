@@ -20,7 +20,7 @@ public class GameLogic : MonoBehaviour
     private int[] howManyTreesGrowthThere;
 
     private int[] aliveTrees;
-    private int gameState = 2;
+    public int gameState = 2;
     public int points = 0;
     public int liveTrees = 0;
 
@@ -117,19 +117,21 @@ public class GameLogic : MonoBehaviour
     public int canHarvest(float x, float y) {
         Debug.Log($"harvest point {x}  {y}");
         int zone = checkInsideZones(x, y);
-        if (zone == -1) return 0;
+        if (zone == -1) {
+            HandleGameUI.Instance.showHelper("Esta zona no permite ser explotada, busca zonas mas claras!");
+            return 0;
+        }
 
         Debug.Log($"harvest point zone {zone} already {howManyTreesGrowthThere[zone]} can  {howManyTreesCanGrowThere[zone]}");
-        if (howManyTreesGrowthThere[zone] + 1 > howManyTreesCanGrowThere[zone]) return 1;
+        if (howManyTreesGrowthThere[zone] + 1 > howManyTreesCanGrowThere[zone]) {
+            HandleGameUI.Instance.showHelper("Esta zona no permite ser explotada, lo has arruinado :(, busca otra zona para salir victorioso!");
+            return 1;
+        }
         howManyTreesGrowthThere[zone]++;
         aliveTrees[zone]++;
 
         Instantiate(aliveTree, new Vector3(x, y, 0),  Quaternion.identity);   
         gameState = checkGameState(); 
-        if (gameState == 1)
-            Debug.Log("Ganaste");
-        else if (gameState == 0)
-            Debug.Log("Perdiste");
         points++;
         liveTrees++;
          Debug.Log($"Game state: toHarvest {howManyTrees} points: {points} liveTrees: {liveTrees}");

@@ -25,6 +25,7 @@ public class PlayerMovement : CharacterMovement {
     } 
 
     private void Update() {
+        if (GameLogic.Instance.gameState != 2) return;
         if (Input.GetKeyDown(KeyCode.H) && playerToolManager.toolIndex == 0) {
             int harvestingResult = GameLogic.Instance.canHarvest(transform.position.x, transform.position.y);
             Debug.Log($"Haversting result {harvestingResult}");
