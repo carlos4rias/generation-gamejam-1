@@ -19,6 +19,11 @@ public class GameLogic : MonoBehaviour
     private int[] howManyTreesCanGrowThere;
     private int[] howManyTreesGrowthThere;
 
+    private int[] aliveTrees;
+    private int gameState = 2;
+    private int points = 0;
+    private int liveTrees = 0;
+
     private void Awake() {
 
         if (Instance != null && Instance != this)
@@ -29,8 +34,8 @@ public class GameLogic : MonoBehaviour
 
         Instance = this;
 
-        howManyTrees = UnityEngine.Random.Range(30, 51);
-        populatedWith = howManyTrees / 2;
+        howManyTrees = UnityEngine.Random.Range(30, 37);
+        populatedWith = howManyTrees - 7;
         harvestingZones = new Vector2[] { 
             new(-6, 2), new(-3, -4),
             new(-1, -1), new(2, -5),
@@ -43,6 +48,7 @@ public class GameLogic : MonoBehaviour
         };
         howManyTreesCanGrowThere = new int[7];
         howManyTreesGrowthThere = new int[7];
+        aliveTrees = new int[7];
         PopulateZones();
     }
 
@@ -52,6 +58,8 @@ public class GameLogic : MonoBehaviour
             Vector2 second = harvestingZones[i + 1];
             int howManyInThisZone = UnityEngine.Random.Range(1, Math.Min(5, populatedWith + 1));
             howManyTreesGrowthThere[i / 2] = howManyInThisZone;
+            aliveTrees[i / 2] = howManyInThisZone;
+            liveTrees += howManyInThisZone;
             howManyTreesCanGrowThere[i / 2] = howManyInThisZone + UnityEngine.Random.Range(1, 5);
             populatedWith -= howManyInThisZone;
 
@@ -74,6 +82,37 @@ public class GameLogic : MonoBehaviour
         return -1;
     }
 
+    public void deforest(float x, float y) {
+        int zone = checkInsideZones(x, y);
+        if (zone == -1) return;
+        aliveTrees[zone]--;
+        liveTrees--;
+        points += UnityEngine.Random.Range(1, 11);
+
+        Debug.Log($"Game state: toHarvest {howManyTrees} points: {points} liveTrees{liveTrees}");
+        if (gameState == 1)
+            Debug.Log("Ganaste");
+        else if (gameState == 0)
+            Debug.Log("Perdiste");
+        gameState = checkGameState();    
+    }
+
+    private int checkGameState() {
+        int sumAlives = 0;
+        for (int i = 0; i < aliveTrees.Length; i++) sumAlives += aliveTrees[i];
+
+        if (sumAlives >= howManyTrees) return 1;
+        
+        int possibles = 0;
+        for (int i = 0; i < aliveTrees.Length; i++) {
+            possibles += howManyTreesCanGrowThere[i] - howManyTreesGrowthThere[i];
+        }
+
+        if (sumAlives + possibles < howManyTrees) { return 0; }
+
+        return 2;
+    }
+
 
     public int canHarvest(float x, float y) {
         Debug.Log($"harvest point {x}  {y}");
@@ -83,8 +122,17 @@ public class GameLogic : MonoBehaviour
         Debug.Log($"harvest point zone {zone} already {howManyTreesGrowthThere[zone]} can  {howManyTreesCanGrowThere[zone]}");
         if (howManyTreesGrowthThere[zone] + 1 > howManyTreesCanGrowThere[zone]) return 1;
         howManyTreesGrowthThere[zone]++;
-        
-        Instantiate(aliveTree, new Vector3(x, y, 0),  Quaternion.identity);    
+        aliveTrees[zone]++;
+
+        Instantiate(aliveTree, new Vector3(x, y, 0),  Quaternion.identity);   
+        gameState = checkGameState(); 
+        if (gameState == 1)
+            Debug.Log("Ganaste");
+        else if (gameState == 0)
+            Debug.Log("Perdiste");
+        points++;
+        liveTrees++;
+         Debug.Log($"Game state: toHarvest {howManyTrees} points: {points} liveTrees: {liveTrees}");
         return 2;
     }
  

@@ -67,6 +67,7 @@ public class PlayerMovement : CharacterMovement {
         Debug.Log(other.tag);
         if (other.tag == "AliveTree" && playerToolManager.toolIndex == 1) {
             Vector3 transformParent = other.transform.position;
+            GameLogic.Instance.deforest(transformParent.x, transformParent.y);
             transformParent.y -= 0.4f;
             Destroy(other.gameObject);
             Instantiate(deadTree, transformParent,  Quaternion.identity);
