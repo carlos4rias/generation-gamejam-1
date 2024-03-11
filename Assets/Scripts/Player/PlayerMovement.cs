@@ -24,6 +24,13 @@ public class PlayerMovement : CharacterMovement {
         walkAudio = GetComponent<AudioSource>();
     } 
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.H) && playerToolManager.toolIndex == 0) {
+            int harvestingResult = GameLogic.Instance.canHarvest(transform.position.x, transform.position.y);
+            Debug.Log($"Haversting result {harvestingResult}");
+        }
+    }
+
     // Because we are using the method Translate
     private void FixedUpdate() {
         moveX = Input.GetAxisRaw("Horizontal");
@@ -58,7 +65,7 @@ public class PlayerMovement : CharacterMovement {
 
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log(other.tag);
-        if (other.tag == "AliveTree") {
+        if (other.tag == "AliveTree" && playerToolManager.toolIndex == 1) {
             Vector3 transformParent = other.transform.position;
             transformParent.y -= 0.4f;
             Destroy(other.gameObject);

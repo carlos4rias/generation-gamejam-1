@@ -7,7 +7,7 @@ public class PlayerToolManager : MonoBehaviour
     [SerializeField]
     private ToolManager[] playerTools;
 
-    private int toolIndex;
+    public int toolIndex;
 
     private void Awake() {
         toolIndex = 0;
