@@ -12,10 +12,16 @@ public class PlayerMovement : CharacterMovement {
 
     private PlayerToolManager playerToolManager;
 
+    private AudioSource walkAudio;
+
+    public GameObject deadTree;
+    public GameObject aliveTree;
+
     protected override void Awake() {
         base.Awake();
         animator = GetComponent<Animator>();
         playerToolManager = GetComponent<PlayerToolManager>();
+        walkAudio = GetComponent<AudioSource>();
     } 
 
     // Because we are using the method Translate
@@ -23,11 +29,15 @@ public class PlayerMovement : CharacterMovement {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 
-        if ((moveX!= 0 || moveY != 0) && getDirection(moveX, moveY) != direction) {
-            direction = getDirection(moveX, moveY);
+        if ((moveX!= 0 || moveY != 0)) {
+            if (getDirection(moveX, moveY) != direction)
+                direction = getDirection(moveX, moveY);
+            HandlePlayerAnimation(moveX, moveY);    
+            HandleMovement(moveX, moveY);
+            walkAudio.Play();
+        } else {
+            walkAudio.Stop();
         }
-        HandlePlayerAnimation(moveX, moveY);    
-        HandleMovement(moveX, moveY);
     }
 
     private int getDirection(float x, float y) {
@@ -46,6 +56,14 @@ public class PlayerMovement : CharacterMovement {
         playerToolManager.ActivateTool(direction - 1);
     }
 
-
+    private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log(other.tag);
+        if (other.tag == "AliveTree") {
+            Vector3 transformParent = other.transform.position;
+            transformParent.y -= 0.4f;
+            Destroy(other.gameObject);
+            Instantiate(deadTree, transformParent,  Quaternion.identity);
+        }
+    }
 
 }

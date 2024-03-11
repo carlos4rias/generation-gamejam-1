@@ -29,4 +29,6 @@ public class PlayerToolManager : MonoBehaviour
             playerTools[toolIndex].gameObject.SetActive(true);
         }
     }
+
+    
 }
