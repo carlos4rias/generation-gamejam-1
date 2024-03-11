@@ -56,11 +56,11 @@ public class GameLogic : MonoBehaviour
         for (int i = 0; i < harvestingZones.Length; i += 2) {
             Vector2 first = harvestingZones[i];
             Vector2 second = harvestingZones[i + 1];
-            int howManyInThisZone = UnityEngine.Random.Range(1, Math.Min(5, populatedWith + 1));
+            int howManyInThisZone = UnityEngine.Random.Range(2, Math.Min(5, populatedWith + 1));
             howManyTreesGrowthThere[i / 2] = howManyInThisZone;
             aliveTrees[i / 2] = howManyInThisZone;
             liveTrees += howManyInThisZone;
-            howManyTreesCanGrowThere[i / 2] = howManyInThisZone + UnityEngine.Random.Range(1, 5);
+            howManyTreesCanGrowThere[i / 2] = howManyInThisZone + UnityEngine.Random.Range(2, 5);
             populatedWith -= howManyInThisZone;
 
             for (int j = 0; j < howManyInThisZone; ++j) {
