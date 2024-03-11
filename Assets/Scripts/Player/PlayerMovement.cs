@@ -10,9 +10,12 @@ public class PlayerMovement : CharacterMovement {
 
     private int direction = 1;
 
+    private PlayerToolManager playerToolManager;
+
     protected override void Awake() {
         base.Awake();
         animator = GetComponent<Animator>();
+        playerToolManager = GetComponent<PlayerToolManager>();
     } 
 
     // Because we are using the method Translate
@@ -21,9 +24,9 @@ public class PlayerMovement : CharacterMovement {
         moveY = Input.GetAxisRaw("Vertical");
 
         if ((moveX!= 0 || moveY != 0) && getDirection(moveX, moveY) != direction) {
-            HandlePlayerAnimation(moveX, moveY);    
             direction = getDirection(moveX, moveY);
         }
+        HandlePlayerAnimation(moveX, moveY);    
         HandleMovement(moveX, moveY);
     }
 
@@ -31,14 +34,18 @@ public class PlayerMovement : CharacterMovement {
         int xi = Mathf.RoundToInt(x);
         int yi = Mathf.RoundToInt(y);
         if (xi == 0 && yi == -1) return 1;
-        if (xi == 1 && yi == 0) return 2;
-        if (xi == 0 && yi == 1) return 3;
-        if (xi == -1 && yi == 0) return 4;
+        if (xi == 1 && yi == 0) return 3;
+        if (xi == 0 && yi == 1) return 4;
+        if (xi == -1 && yi == 0) return 2;
         return 1;
     }
 
     private void HandlePlayerAnimation(float x, float y) {
         animator.SetFloat("X", x);
         animator.SetFloat("Y", y);
+        playerToolManager.ActivateTool(direction - 1);
     }
+
+
+
 }
